@@ -1,0 +1,11 @@
+services:
+  whatsapp_web_js_api:
+    container_name: whatsapp_web_js_api
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./sessions:/usr/src/app/sessions
+    environment:
+      - SESSION_ID=your_session_id_here
+#      - API_KEY=your_api_key_here # OPTIONAL, RECOMMENDED FOR PRODUCTION
