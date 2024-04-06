@@ -41,7 +41,7 @@ const _getMessageById = async (messageId, chatId) => {
 }
 
 exports.sendMessage = async (chatId, contentType, content) => {
-    const message = await client.sendMessage(chatId, contentType, content);
+    const message = await client.sendMessage(chatId, content);
     return message;
 };
 
