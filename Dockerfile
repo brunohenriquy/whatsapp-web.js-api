@@ -17,8 +17,8 @@ COPY package*.json ./
 
 RUN npm ci --only=production --ignore-scripts
 
-COPY . .
+COPY src .
 
 EXPOSE 3000
 
-CMD ["node", "index.js"]
+CMD ["node", "app.js"]
