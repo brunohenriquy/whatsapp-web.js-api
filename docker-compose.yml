@@ -1,7 +1,8 @@
 services:
   whatsapp_web_js_api:
     container_name: whatsapp_web_js_api
-    build: .
+    image: brunohenriquy/whatsapp-web-js-api:latest
+#    build: .
     ports:
       - "3000:3000"
     volumes:
