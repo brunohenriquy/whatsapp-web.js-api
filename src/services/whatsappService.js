@@ -57,6 +57,7 @@ async function initializeClient() {
   });
 
   client.on('ready', async () => {
+    client.qr = null;
     console.log('Client is ready!');
     try {
       const state = await client.getState();
