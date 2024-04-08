@@ -1,5 +1,5 @@
 exports.sendResponse = (res, status, success, message) => {
-  res.status(status).json({ success: success, message: message });
+  res.status(status).json({success: success, message: message});
 };
 
 exports.sendErrorResponse = (res, status, message) => {
