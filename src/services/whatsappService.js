@@ -10,6 +10,7 @@ async function initializeClient() {
     let args = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu', '--disable-dev-shm-usage'];
     let userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36';
     if (process.env.MONGODB_URI) {
+        console.log('Auth Strategy: RemoteAuth');
         await mongoose.connect(process.env.MONGODB_URI);
         const store = new MongoStore({mongoose: mongoose});
         client = new Client({
@@ -29,6 +30,7 @@ async function initializeClient() {
         });
 
     } else {
+        console.log('Auth Strategy: LocalAuth');
         client = new Client({
             authStrategy: new LocalAuth({
                 clientId: process.env.SESSION_ID,
