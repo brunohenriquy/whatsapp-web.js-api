@@ -1,37 +1,72 @@
-const { Client, LocalAuth } = require('whatsapp-web.js');
+const { Client, LocalAuth, RemoteAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+const { MongoStore } = require('wwebjs-mongo');
+const mongoose = require('mongoose');
 
-const client = new Client({
-    authStrategy: new LocalAuth({ clientId: process.env.SESSION_ID, dataPath: './sessions' }),
-    puppeteer: {
-        headless: true,
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu', '--disable-dev-shm-usage']
-    },
-    userAgent: 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36',
-});
+let client;
 
-client.on('qr', (qr) => {
-    // Generate and scan this code with your phone
-    console.log('QR RECEIVED', qr);
-    qrcode.generate(qr, { small: true });
-});
+async function initializeClient() {
+    let headless = true;
+    let args = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu', '--disable-dev-shm-usage'];
+    let userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36';
+    if (process.env.MONGODB_URI) {
+        await mongoose.connect(process.env.MONGODB_URI);
+        const store = new MongoStore({mongoose: mongoose});
+        client = new Client({
+            authStrategy: new RemoteAuth({
+                store: store,
+                backupSyncIntervalMs: process.env.BACKUP_SYNC_INTERVAL_MS
+            }),
+            puppeteer: {
+                headless: headless,
+                args: args
+            },
+            userAgent: userAgent,
+        });
 
-client.on('auth_failure', msg => {
-    // Fired if session restore was unsuccessful
-    console.error('AUTHENTICATION FAILURE', msg);
-});
+        client.on('remote_session_saved', () => {
+            console.log('Session saved on DB');
+        });
 
-client.on('ready', async () => {
-    console.log('Client is ready!');
-    try {
-        const state = await client.getState();
-        console.log('Current state:', state);
-    } catch (error) {
-        console.error('Error fetching state:', error);
+    } else {
+        client = new Client({
+            authStrategy: new LocalAuth({
+                clientId: process.env.SESSION_ID,
+                dataPath: './sessions'
+            }),
+            puppeteer: {
+                headless: headless,
+                args: args
+            },
+            userAgent: userAgent,
+        });
     }
-});
 
-client.initialize();
+    client.on('qr', (qr) => {
+        // Generate and scan this code with your phone
+        console.log('QR RECEIVED', qr);
+        qrcode.generate(qr, {small: true});
+    });
+
+    client.on('auth_failure', msg => {
+        // Fired if session restore was unsuccessful
+        console.error('AUTHENTICATION FAILURE', msg);
+    });
+
+    client.on('ready', async () => {
+        console.log('Client is ready!');
+        try {
+            const state = await client.getState();
+            console.log('Current state:', state);
+        } catch (error) {
+            console.error('Error fetching state:', error);
+        }
+    });
+
+    client.initialize();
+}
+
+initializeClient();
 
 const _getMessageById = async (messageId, chatId) => {
   const chat = await client.getChatById(chatId)
