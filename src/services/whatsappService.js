@@ -67,6 +67,10 @@ async function initializeClient() {
     }
   });
 
+  client.on('disconnected', (reason) => {
+    console.log('Client was logged out', reason);
+  });
+
   client.initialize();
 }
 
