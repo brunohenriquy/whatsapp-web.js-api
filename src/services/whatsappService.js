@@ -2,6 +2,10 @@ const {Client, LocalAuth, RemoteAuth} = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
 const {MongoStore} = require('wwebjs-mongo');
 const mongoose = require('mongoose');
+const packageJson = require('./package.json');
+const version = packageJson.version;
+
+console.log("Version:", version);
 
 let client;
 
