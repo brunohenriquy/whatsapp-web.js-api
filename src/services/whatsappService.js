@@ -11,42 +11,39 @@ let client;
 
 async function initializeClient() {
   let headless = true;
-  let args = ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu', '--disable-dev-shm-usage'];
+  let args = [
+    '--no-sandbox',
+    '--disable-setuid-sandbox',
+    '--disable-gpu',
+    '--disable-dev-shm-usage'
+  ];
   let userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36';
+  let authStrategy;
   if (process.env.MONGODB_URI) {
     console.log('Auth Strategy: RemoteAuth');
     await mongoose.connect(process.env.MONGODB_URI);
     const store = new MongoStore({mongoose: mongoose});
-    client = new Client({
-      authStrategy: new RemoteAuth({
-        store: store,
-        backupSyncIntervalMs: process.env.BACKUP_SYNC_INTERVAL_MS
-      }),
-      puppeteer: {
-        headless: headless,
-        args: args
-      },
-      userAgent: userAgent,
-    });
-
-    client.on('remote_session_saved', () => {
-      console.log('Session saved on DB');
+    authStrategy = new RemoteAuth({
+      store: store,
+      backupSyncIntervalMs: process.env.BACKUP_SYNC_INTERVAL_MS
     });
 
   } else {
     console.log('Auth Strategy: LocalAuth');
-    client = new Client({
-      authStrategy: new LocalAuth({
-        clientId: process.env.SESSION_ID,
-        dataPath: './sessions'
-      }),
-      puppeteer: {
-        headless: headless,
-        args: args
-      },
-      userAgent: userAgent,
+    authStrategy: new LocalAuth({
+      clientId: process.env.SESSION_ID,
+      dataPath: './sessions'
     });
   }
+
+  client = new Client({
+    authStrategy: authStrategy,
+    puppeteer: {
+      headless: headless,
+      args: args
+    },
+    userAgent: userAgent,
+  });
 
   client.on('qr', (qr) => {
     // Generate and scan this code with your phone
@@ -73,6 +70,10 @@ async function initializeClient() {
 
   client.on('disconnected', (reason) => {
     console.log('Client was logged out', reason);
+  });
+
+  client.on('remote_session_saved', () => {
+    console.log('Session saved on DB');
   });
 
   client.initialize();
