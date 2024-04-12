@@ -15,7 +15,12 @@ async function initializeClient() {
     '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-gpu',
-    '--disable-dev-shm-usage'
+    '--disable-dev-shm-usage',
+    '--disable-extensions',
+    '--disable-accelerated-2d-canvas',
+    '--no-first-run',
+    '--no-zygote',
+    '--single-process',
   ];
   let userAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36';
   let authStrategy;
