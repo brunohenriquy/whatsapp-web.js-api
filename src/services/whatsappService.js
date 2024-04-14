@@ -30,7 +30,7 @@ async function initializeClient() {
 
   } else {
     console.log('Auth Strategy: LocalAuth');
-    authStrategy: new LocalAuth({
+    authStrategy = new LocalAuth({
       clientId: process.env.SESSION_ID,
       dataPath: './sessions'
     });
