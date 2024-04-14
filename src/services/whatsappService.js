@@ -72,9 +72,9 @@ async function initializeClient() {
     console.log('Client was logged out', reason);
   });
 
-  client.on('remote_session_saved', () => {
-    console.log('Session saved on DB');
-  });
+  // client.on('remote_session_saved', () => {
+  //   console.log('Session saved on DB');
+  // });
 
   client.initialize();
 }
