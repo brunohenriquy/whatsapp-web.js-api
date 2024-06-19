@@ -1,6 +1,6 @@
 {
   "name": "whatsapp-web.js-api",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "description": "Docker api example for whatsapp-web.js",
   "author": "Bruno Henrique de Paula",
   "license": "MIT",
