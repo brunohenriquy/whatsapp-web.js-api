@@ -3,6 +3,7 @@ FROM node:20-alpine
 WORKDIR /usr/src/app
 
 ENV CHROME_BIN="/usr/bin/chromium-browser" \
+    PUPPETEER_EXECUTABLE_PATH="/usr/bin/chromium-browser" \
     PUPPETEER_SKIP_CHROMIUM_DOWNLOAD="true" \
     NODE_ENV="production"
 RUN set -x \
