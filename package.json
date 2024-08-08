@@ -1,6 +1,6 @@
 {
   "name": "whatsapp-web.js-api",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Docker api example for whatsapp-web.js",
   "author": "Bruno Henrique de Paula",
   "license": "MIT",
@@ -26,7 +26,7 @@
     "mongoose": "^8.3.0",
     "qr-image": "^3.2.0",
     "qrcode-terminal": "^0.12.0",
-    "whatsapp-web.js": "github:brunohenriquy/whatsapp-web.js#webpack-exodus-fix-remote-auth",
+    "whatsapp-web.js": "github:brunohenriquy/whatsapp-web.js#mine",
     "wwebjs-mongo": "^1.1.0"
   }
 }
